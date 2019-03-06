@@ -524,6 +524,11 @@ bool ULogParser::readFormat(std::ifstream &file, uint16_t msg_size)
         else{
             field.type = OTHER;
             field.other_type_ID = field_type.to_string();
+            if (field_type.ends_with("]")) {
+                StringView new_string = field_type;
+                new_string.remove_suffix(3);
+                field.other_type_ID = new_string.to_string();
+            }
         }
 
         field.array_size = 1;
