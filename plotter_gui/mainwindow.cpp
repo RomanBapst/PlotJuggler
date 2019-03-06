@@ -453,7 +453,7 @@ void MainWindow::loadPlugins(QString directory_name)
 
     QDir pluginsDir( directory_name );
 
-    for (QString filename: pluginsDir.entryList(QDir::Files))
+    for (const QString& filename: pluginsDir.entryList(QDir::Files))
     {
         QFileInfo fileinfo(filename);
         if( fileinfo.suffix() != "so" && fileinfo.suffix() != "dll" && fileinfo.suffix() != "dylib"){

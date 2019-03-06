@@ -92,8 +92,18 @@ ULogParser::ULogParser(const std::string &filename):
 
         } break;
 
-        case (int)ULogMessageType::LOGGING: //printf("LOGGING\n" );
-            break;
+        case (int)ULogMessageType::LOGGING:
+        {
+            MessageLog msg;
+            msg.level = static_cast<char>( message[0] );
+            message += sizeof( char );
+            msg.timestamp = *reinterpret_cast<uint64_t*>(message);
+            message += sizeof( uint64_t );
+            msg.msg.assign( message, message_header.msg_size - 9 );
+            //printf("LOG %c (%ld): %s\n", msg.level, msg.timestamp, msg.msg.c_str() );
+            _message_logs.push_back( std::move( msg ) );
+
+        } break;
         case (int)ULogMessageType::SYNC:// printf("SYNC\n" );
             break;
         case (int)ULogMessageType::DROPOUT: //printf("DROPOUT\n" );
@@ -236,6 +246,11 @@ const std::vector<ULogParser::Parameter>& ULogParser::getParameters() const
 const std::map<std::string, std::string> &ULogParser::getInfo() const
 {
     return _info;
+}
+
+const std::vector<ULogParser::MessageLog> &ULogParser::getLogs() const
+{
+    return _message_logs;
 }
 
 

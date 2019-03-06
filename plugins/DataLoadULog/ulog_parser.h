@@ -48,6 +48,13 @@ public:
         int padding;
     };
 
+    struct MessageLog
+    {
+        char level;
+        uint64_t timestamp;
+        std::string msg;
+    };
+
     struct Subscription
     {
         Subscription(): msg_id(0), multi_id(0), format(nullptr) {}
@@ -73,6 +80,8 @@ public:
     const std::vector<Parameter> &getParameters() const;
 
     const std::map<std::string, std::string> &getInfo() const;
+
+    const std::vector<MessageLog> &getLogs() const;
 
 private:
     bool readFileHeader(std::ifstream &file);
@@ -116,6 +125,8 @@ private:
     std::vector<StringView> splitString(const StringView& strToSplit, char delimeter);
 
     std::set<std::string> _message_name_with_multi_id;
+
+    std::vector<MessageLog> _message_logs;
 
     void parseDataMessage(const Subscription& sub, char *message);
 
